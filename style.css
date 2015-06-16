@@ -1,0 +1,17 @@
+#tetris-container{
+    width: 750px;
+    height: 500px;
+    margin: auto;
+}
+
+#tetris-canvas{
+    float: left;
+    width: 500px;
+    height: 500px;
+}
+
+#tetris-ui{
+    float: left;
+    width: 250px;
+    height: 500px;
+}
