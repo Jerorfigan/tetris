@@ -37,7 +37,7 @@ window.onload = function(){
 
             var thisObj = this;
             window.requestAnimationFrame(function(){
-                Driver.prototype.loop.call(thisObj, arguments);
+                Driver.prototype.loop.apply(thisObj, arguments);
             });
         };
 
