@@ -8,7 +8,8 @@ if(!window.tetris){
         "Z": {keyCode: 90, isDown: false, pressCount: 0, releaseCount: 0},
         "X": {keyCode: 88, isDown: false, pressCount: 0, releaseCount: 0},
         "Left": {keyCode: 37, isDown: false, pressCount: 0, releaseCount: 0},
-        "Right": {keyCode: 39, isDown: false, pressCount: 0, releaseCount: 0}
+        "Right": {keyCode: 39, isDown: false, pressCount: 0, releaseCount: 0},
+        "Space": {keyCode: 32, isDown: false, pressCount: 0, releaseCount: 0}
     };
 
     function toggleKey(event, isDown){
@@ -51,12 +52,10 @@ if(!window.tetris){
     }
 
     function onKeyDown(event){
-        console.log("onKeyPress called");
         toggleKey(event, true);
     }
 
     function onKeyUp(event){
-        console.log("onKeyUp called");
         toggleKey(event, false);
     }
 

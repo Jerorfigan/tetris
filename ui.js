@@ -4,10 +4,11 @@ if(!window.tetris){
 
 (function(){
     var UI = function(){
-        //window.document.getElementById("tetris-button").addEventListener("click", function(){
-        //    console.log("button clicked");
-        //});
-        // TODO add other ui event registration
+        this.messageTag = window.document.getElementById("tetris-message");
+    };
+
+    UI.prototype.showMessage = function(message){
+        this.messageTag.innerHTML = message;
     };
 
     window.tetris.UI = new UI();

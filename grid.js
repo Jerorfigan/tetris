@@ -228,6 +228,15 @@ if(!window.tetris){
         }
     };
 
+    Grid.prototype.reset = function(){
+        this.fallingBlock = null;
+        this.collisionGrid = null;
+        this.rowStats = null;
+
+        initCollisionGrid.call(this);
+        initRowStats.call(this);
+    };
+
     Grid.prototype.drawGrid = function(canvas){
         var ctx2d = canvas.getContext("2d");
         var gridBlockDrawWidth = window.tetris.Settings.gridBlockDrawWidth;
