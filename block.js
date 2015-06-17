@@ -76,12 +76,12 @@ if(!window.tetris){
     ];
 
     var blockColors = [
-        "#FF0000",
-        "#00FF00",
-        "#0000FF",
-        "#FF9900",
-        "#FF00FF",
-        "#00FFFF"
+        {fill: "#FF0000", inset: "#FF4D4D", outset: "#B20000"}, // red
+        {fill: "#00FF00", inset: "#4DFF4D", outset: "#00B200"}, // green
+        {fill: "#0000FF", inset: "#4D4DFF", outset: "#0000B2"}, // blue
+        {fill: "#FF9900", inset: "#FFB84D", outset: "#B26B00"}, // orange
+        {fill: "#FF00FF", inset: "#FF4DFF", outset: "#B200B2"}, // purple
+        {fill: "#00FFFF", inset: "#4DFFFF", outset: "#00B2B2"}  // teal
     ];
 
     function getRandomBlockType(){
@@ -93,7 +93,7 @@ if(!window.tetris){
     }
 
     function getRandomBlockColor(){
-        return blockColors[Math.floor(Math.random() * blockColors.length)];
+        return Math.floor(Math.random() * blockColors.length);
     }
     /* End Private Members */
 
@@ -149,7 +149,7 @@ if(!window.tetris){
     };
 
     Block.prototype.getColor = function(){
-        return this.color;
+        return blockColors[this.color];
     };
 
     window.tetris.Block = Block;

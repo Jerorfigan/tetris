@@ -13,8 +13,11 @@ if(!window.tetris){
         this.gridHeight = 20; // in blocks
         this.gridBlockDrawWidth = 20; // in pixels
         this.gridBlockDrawHeight = 20; // in pixels
-        this.gridLineDrawWidth = 2; // in pixels
-        this.gridLineStrokeColor = "#606060";
+        this.gridOutlineDrawWidth = 2; // in pixels
+        this.gridOutlineColor = "#606060";
+        this.gridBlockOutlineWidth = 2; // in pixels
+        this.gridBlockOutlineColor = "#303030";
+        this.gridBlockInsetWidth = 2; // in pixels
 
         // block settings
         this.blockSpawnPos = {x: Math.floor(this.gridWidth / 2), y: Math.min(2, this.gridHeight - 1)};
