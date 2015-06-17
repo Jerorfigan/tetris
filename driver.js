@@ -22,17 +22,17 @@ window.onload = function(){
     // Setup and kick off game driver
     (function () {
         var Driver = function () {
-            this.lastUpdate = 0;
-            this.framePeriod = (1 / window.tetris.Settings.targetFps) * 1000;
+            this.lastUpdateTimeInMilliseconds = 0;
+            this.framePeriodInMilliseconds = window.tetris.Settings.targetFramePeriodInSeconds * 1000;
             this.gameManager = new window.tetris.GameManager();
             this.gameUI = new window.tetris.UI();
         };
 
-        Driver.prototype.loop = function (currTime) {
-            if(currTime - this.lastUpdate > this.framePeriod){
+        Driver.prototype.loop = function (currTimeInMilliseconds) {
+            if(currTimeInMilliseconds - this.lastUpdateTimeInMilliseconds > this.framePeriodInMilliseconds){
                 this.gameManager.update();
                 this.gameManager.draw();
-                this.lastUpdate = currTime;
+                this.lastUpdateTimeInMilliseconds = currTimeInMilliseconds;
             }
 
             var thisObj = this;
@@ -44,4 +44,4 @@ window.onload = function(){
         window.tetris.Driver = new Driver();
         window.tetris.Driver.loop(0);
     }());
-}
+};
