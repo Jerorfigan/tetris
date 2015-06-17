@@ -23,6 +23,12 @@ if(!window.tetris){
         this.blockSpawnPos = {x: Math.floor(this.gridWidth / 2), y: Math.min(2, this.gridHeight - 1)};
         this.blockFallSpeed = 3; // in grid blocks per second
         this.blockFallPeriod = 1 / this.blockFallSpeed; // in seconds per grid block
+        this.blockDownForceSpeed = 18; // in grid blocks per second
+        this.blockDownForcePeriod = 1 / this.blockDownForceSpeed; // in seconds per grid block
+        this.blockHorizontalForceSpeed = 10; // in grid blocks per second
+        this.blockHorizontalForcePeriod = 1 / this.blockHorizontalForceSpeed; // in seconds per grid block
+        this.blockRotationForceSpeed = 1; // in 90 degree increments per second
+        this.blockRotationForcePeriod = 1 / this.blockRotationForceSpeed; // in seconds per 90 degree increment
         // TODO define other game settings
     };
 

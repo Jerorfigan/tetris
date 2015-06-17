@@ -72,10 +72,21 @@ if(!window.tetris){
             var state = this.fallingBlock.getState();
             this.fallingBlock.applyRotation();
             if(
-                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints()) ||
-                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints())
+                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints()) ||
+                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Rotation resulted in invalid position, reset block state
+                this.fallingBlock.resetState(state);
+            }
+
+            // Apply horizontal force to falling block
+            state = this.fallingBlock.getState();
+            this.fallingBlock.applyHorizontalForce();
+            if(
+                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints()) ||
+                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
+            ){
+                // Horizontal force resulted in invalid position, reset block state
                 this.fallingBlock.resetState(state);
             }
 
@@ -83,8 +94,8 @@ if(!window.tetris){
             state = this.fallingBlock.getState();
             this.fallingBlock.applyDownForce();
             if(
-                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints()) ||
-                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints())
+                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints()) ||
+                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Down force resulted in invalid position, reset block state
                 this.fallingBlock.resetState(state);
@@ -94,8 +105,8 @@ if(!window.tetris){
             state = this.fallingBlock.getState();
             this.fallingBlock.applyGravity();
             if(
-                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints()) ||
-                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints())
+                areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints()) ||
+                areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Gravity caused block collision, reset block state
                 this.fallingBlock.resetState(state);

@@ -102,17 +102,89 @@ if(!window.tetris){
             x: window.tetris.Settings.blockSpawnPos.x,
             y: window.tetris.Settings.blockSpawnPos.y};
         this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
+        this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
+        this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
+        this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
         this.type = getRandomBlockType.call(this);
         this.angle = getRandomBlockAngle.call(this);
         this.color = getRandomBlockColor.call(this);
     };
 
     Block.prototype.applyRotation = function(){
-        // TODO apply rotation from user input
+        if(window.tetris.Input.getReleaseCount("Z") > 0 || window.tetris.Input.getReleaseCount("X") > 0){
+            // Upon releasing Z/X, reset rotation timer to prevent accidental double rotates
+            this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
+            window.tetris.Input.clearReleaseCount("Z");
+            window.tetris.Input.clearReleaseCount("X");
+        }
+        // On the first press, do an immediate update
+        if(window.tetris.Input.getPressCount("Z") > 0 || window.tetris.Input.getPressCount("X") > 0){
+            if(window.tetris.Input.getPressCount("Z") > 0) {
+                this.angle -= 1;
+                window.tetris.Input.clearPressCount("Z");
+            }else if(window.tetris.Input.getPressCount("X") > 0){
+                this.angle += 1;
+                window.tetris.Input.clearPressCount("X");
+            }
+            // Upon detecting a keypress, reset rotation timer to prevent accidental double rotates
+            this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
+        }else if(window.tetris.Input.isKeyDown("Z") || window.tetris.Input.isKeyDown("X")){
+            // Continued press, do update at interval
+            this.timeUntilRotationForceUpdateInSeconds -= window.tetris.Settings.targetFramePeriodInSeconds;
+            if(this.timeUntilRotationForceUpdateInSeconds <= 0){
+                if(window.tetris.Input.isKeyDown("Z")) {
+                    this.angle -= 1;
+                }else if(window.tetris.Input.isKeyDown("X")){
+                    this.angle += 1;
+                }
+                this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
+            }
+        }
+        // wrap angle between 0 and 3
+        if(this.angle < 0) this.angle = 3;
+        if(this.angle > 3) this.angle = 0;
+    };
+
+    Block.prototype.applyHorizontalForce = function(){
+        if(window.tetris.Input.getReleaseCount("Left") > 0 || window.tetris.Input.getReleaseCount("Right") > 0){
+            // Upon releasing Left/Right, reset horizontal force timer to prevent accidental double rotates
+            this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
+            window.tetris.Input.clearReleaseCount("Left");
+            window.tetris.Input.clearReleaseCount("Right");
+        }
+        // On the first press, do an immediate update
+        if(window.tetris.Input.getPressCount("Left") > 0 || window.tetris.Input.getPressCount("Right") > 0) {
+            if (window.tetris.Input.getPressCount("Left") > 0) {
+                this.position.x -= 1;
+                window.tetris.Input.clearPressCount("Left");
+            } else if (window.tetris.Input.getPressCount("Right") > 0) {
+                this.position.x += 1;
+                window.tetris.Input.clearPressCount("Right");
+            }
+            // Reset horizontal update timer to prevent accidental double moves
+            this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
+        }else if(window.tetris.Input.isKeyDown("Left") || window.tetris.Input.isKeyDown("Right")){
+            // Continued press, do update at interval
+            this.timeUntilHorizontalForceUpdateInSeconds -= window.tetris.Settings.targetFramePeriodInSeconds;
+            if(this.timeUntilHorizontalForceUpdateInSeconds <= 0){
+                if(window.tetris.Input.isKeyDown("Left")){
+                    this.position.x -= 1;
+                }else if(window.tetris.Input.isKeyDown("Right")){
+                    this.position.x += 1;
+                }
+                this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
+            }
+        }
     };
 
     Block.prototype.applyDownForce = function(){
-        // TODO apply down force from user input
+        if(window.tetris.Input.isKeyDown("Down")){
+            this.timeUntilDownForceUpdateInSeconds -= window.tetris.Settings.targetFramePeriodInSeconds;
+            if(this.timeUntilDownForceUpdateInSeconds <= 0){
+                this.position.y += 1;
+                this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
+            }
+        }
     };
 
     Block.prototype.applyGravity = function(){
