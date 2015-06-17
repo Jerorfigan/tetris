@@ -14,10 +14,19 @@ if(!window.tetris){
         }
     }
 
+    function initRowStats(){
+        this.rowStats = [];
+
+        for(var row = 0; row < this.height; row++){
+            this.rowStats.push({blocksFilled: 0});
+        }
+    }
+
     function updateCollisionGrid(block){
         var points = block.getPoints();
         for(var i = 0; i < points.length; i++){
             this.collisionGrid[points[i].x][points[i].y] = block;
+            this.rowStats[points[i].y].blocksFilled++;
         }
     }
 
@@ -53,6 +62,70 @@ if(!window.tetris){
                point.y >= window.tetris.Settings.gridHeight ||
                point.y < 0;
     }
+
+    function resolveRowClears(){
+        // While there are still valid rows to check
+            // Find next full or empty row from bottom and label this A
+            // Find next partially filled row and label this B
+            // If we found a partially filled row
+                // Replace A with B
+            // Else
+                // Clear A
+                // Decrement row
+        var targetRow = this.height - 1;
+        var nextPartiallyFilledRow = null;
+        while(true){
+            // Find next filled or empty row
+            while(
+                targetRow >= 0 &&
+                this.rowStats[targetRow].blocksFilled != this.width && // Not full
+                this.rowStats[targetRow].blocksFilled != 0 // Not empty
+            ){
+                targetRow--;
+            }
+            // No more rows to check
+            if(targetRow < 0) return;
+
+            // Find next partially filled row to swap into the filled/empty row
+            if(!nextPartiallyFilledRow){
+                nextPartiallyFilledRow = targetRow - 1;
+            }
+            while(
+                nextPartiallyFilledRow >= 0 &&
+                (this.rowStats[nextPartiallyFilledRow].blocksFilled == this.width || // Is full
+                 this.rowStats[nextPartiallyFilledRow].blocksFilled == 0) // Is empty
+            ){
+                nextPartiallyFilledRow--;
+            }
+
+            // If we found a next partially filled row, copy that row into target
+            if(nextPartiallyFilledRow >= 0){
+                copyRow.call(this, targetRow, nextPartiallyFilledRow);
+            }else{
+                // Otherwise just clear target if nonempty and go to next row
+                if(this.rowStats[targetRow].blocksFilled != 0){
+                    clearRow.call(this, targetRow);
+                }
+                targetRow--;
+            }
+        }
+    }
+
+    function clearRow(target){
+        for(var col = 0; col < this.width; col++){
+            this.collisionGrid[col][target] = null;
+        }
+        this.rowStats[target].blocksFilled = 0;
+    }
+
+    function copyRow(dest, source){
+        for(var col = 0; col < this.width; col++){
+            this.collisionGrid[col][dest] = this.collisionGrid[col][source];
+            this.collisionGrid[col][source] = null;
+        }
+        this.rowStats[dest].blocksFilled = this.rowStats[source].blocksFilled;
+        this.rowStats[source].blocksFilled = 0;
+    }
     /* End private functions */
 
     /* Constructor */
@@ -61,8 +134,10 @@ if(!window.tetris){
         this.height = height;
         this.fallingBlock = null;
         this.collisionGrid = null;
+        this.rowStats = null;
 
         initCollisionGrid.call(this);
+        initRowStats.call(this);
     };
 
     Grid.prototype.update = function(){
@@ -113,7 +188,7 @@ if(!window.tetris){
                 // Update collision grid
                 updateCollisionGrid.call(this, this.fallingBlock);
                 this.fallingBlock = null;
-                // TODO Check for and perform row clears
+                resolveRowClears.call(this);
             }
         }
     };
