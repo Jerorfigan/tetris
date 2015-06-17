@@ -3,7 +3,7 @@ if(!window.tetris){
 }
 
 (function(){
-    /* Private functions */
+    /* Private Members */
 
     // offsets stored as 3d array
     // first index is the block type (square type = 0, straight type = 1, L type = 2)
@@ -53,21 +53,49 @@ if(!window.tetris){
             [{x:-1,y:0},{x:1,y:0},{x:2,y:0}]
         ],
         // L type (2)
+        /* P = pivot point
+            0 degrees                       180 degrees      270 degrees
+            -----                           ---------                -----
+            |   |        90 degrees         |   | P |                |   |
+            -----        -------------      ---------        -------------
+            |   |        | P |   |   |          |   |        |   |   | P |
+            ---------    -------------          -----        -------------
+            | P |   |    |   |                  |   |
+            ---------    -----                  -----
+         */
         [
-            // TODO add offsets for L type
+            // 0 degrees (0)
+            [{x:0,y:-2},{x:0,y:-1},{x:1,y:0}],
+            // 90 degrees (1)
+            [{x:1,y:0},{x:2,y:0},{x:0,y:-1}],
+            // 180 degrees (2)
+            [{x:-1,y:0},{x:0,y:1},{x:0,y:2}],
+            // 270 degrees (3)
+            [{x:-2,y:0},{x:-1,y:0},{x:0,y:-1}]
         ]
     ];
 
+    var blockColors = [
+        "#FF0000",
+        "#00FF00",
+        "#0000FF",
+        "#FF9900",
+        "#FF00FF",
+        "#00FFFF"
+    ];
+
     function getRandomBlockType(){
-        //return Math.floor(Math.random() * 3);
-        // TODO remove test code...test code has removed block L type (2) for the time being since not yet implemented
-        return Math.floor(Math.random() * 2);
+        return Math.floor(Math.random() * 3);
     }
 
     function getRandomBlockAngle(){
         return Math.floor(Math.random() * 4);
     }
-    /* End private functions */
+
+    function getRandomBlockColor(){
+        return blockColors[Math.floor(Math.random() * blockColors.length)];
+    }
+    /* End Private Members */
 
     var Block = function(){
         this.position = {
@@ -76,6 +104,7 @@ if(!window.tetris){
         this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
         this.type = getRandomBlockType.call(this);
         this.angle = getRandomBlockAngle.call(this);
+        this.color = getRandomBlockColor.call(this);
     };
 
     Block.prototype.applyRotation = function(){
@@ -115,11 +144,12 @@ if(!window.tetris){
                 y: this.position.y + offsets[this.type][this.angle][i].y
             });
         }
+        points.push({x: this.position.x, y: this.position.y});
         return points;
     };
 
-    Block.prototype.draw = function(){
-        // TODO draw block
+    Block.prototype.getColor = function(){
+        return this.color;
     };
 
     window.tetris.Block = Block;

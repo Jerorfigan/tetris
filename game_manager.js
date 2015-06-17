@@ -5,7 +5,6 @@ if(!window.tetris){
 (function(){
     var GameManager = function(){
         this.canvas = window.document.getElementById("tetris-canvas");
-        this.context2d = this.canvas.getContext("2d");
         this.gameState = "playing";
         this.grid = new window.tetris.Grid(
             window.tetris.Settings.gridWidth,
@@ -33,7 +32,12 @@ if(!window.tetris){
     };
 
     GameManager.prototype.draw = function(){
-        this.grid.draw();
+        // Clear canvas to off white
+        var ctx2d = this.canvas.getContext("2d");
+        ctx2d.fillStyle = "#FFFFFF";
+        ctx2d.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.grid.draw(this.canvas);
     };
 
     window.tetris.GameManager = GameManager;
