@@ -25,7 +25,6 @@ window.onload = function(){
             this.lastUpdateTimeInMilliseconds = 0;
             this.framePeriodInMilliseconds = window.tetris.Settings.targetFramePeriodInSeconds * 1000;
             this.gameManager = new window.tetris.GameManager();
-            this.gameUI = new window.tetris.UI();
         };
 
         Driver.prototype.loop = function (currTimeInMilliseconds) {
