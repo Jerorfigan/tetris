@@ -9,19 +9,21 @@ if(!window.tetris){
         this.gameState = "init";
         this.grid = null;
         this.blockQueue = null;
+        this.ui = null;
     };
 
     GameManager.prototype.update = function(){
         switch(this.gameState){
             case "init":
-                window.tetris.UI.showMessage(window.tetris.Labels.initializingMsg);
+                window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.initializingMsg);
                 this.canvas = window.document.getElementById("tetris-canvas");
                 this.uiCanvas = window.document.getElementById("tetris-ui-next-block-canvas");
                 this.grid = new window.tetris.Grid(
                     window.tetris.Settings.gridWidth,
                     window.tetris.Settings.gridHeight);
                 this.blockQueue = new window.tetris.BlockQueue();
-                window.tetris.UI.showMessage(window.tetris.Labels.playerControlsMsg);
+                this.ui = new window.tetris.UI();
+                window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
                 this.gameState = "playing";
                 break;
             case "playing":
@@ -30,7 +32,7 @@ if(!window.tetris){
                 }else{
                     this.grid.spawnBlock(this.blockQueue.getNext());
                     if(!this.grid.isInValidState()){
-                        window.tetris.UI.showMessage(window.tetris.Labels.restartGameMsg);
+                        window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.restartGameMsg);
                         this.gameState = "game_over";
                         break;
                     }
@@ -39,8 +41,9 @@ if(!window.tetris){
             case "game_over":
                 if(window.tetris.Input.getPressCount("Space") > 0){
                     window.tetris.Input.clearPressCount("Space");
+                    window.tetris.EventManager.fire("GameRestart");
                     this.grid.reset();
-                    window.tetris.UI.showMessage(window.tetris.Labels.playerControlsMsg);
+                    window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
                     this.gameState = "playing";
                 }
                 break;
@@ -60,6 +63,7 @@ if(!window.tetris){
 
         this.grid.draw(this.canvas);
         this.blockQueue.draw(this.uiCanvas);
+        this.ui.draw();
     };
 
     window.tetris.GameManager = GameManager;

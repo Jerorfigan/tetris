@@ -17,3 +17,13 @@
     height: 500px;
     background-color: lightgray;
 }
+
+p{
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+.metric{
+    background-color: aliceblue;
+    margin: 0 20px;
+}

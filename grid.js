@@ -74,6 +74,7 @@ if(!window.tetris){
                 // Decrement row
         var targetRow = this.height - 1;
         var nextPartiallyFilledRow = null;
+        var linesCleared = 0;
         while(true){
             // Find next filled or empty row
             while(
@@ -96,6 +97,12 @@ if(!window.tetris){
                  this.rowStats[nextPartiallyFilledRow].blocksFilled == 0) // Is empty
             ){
                 nextPartiallyFilledRow--;
+            }
+
+            // Check if we're about to do a line clear and fire event
+            if(this.rowStats[targetRow].blocksFilled == this.width){
+                linesCleared++;
+                window.tetris.EventManager.fire("LineCleared", {prevLinesCleared: linesCleared - 1});
             }
 
             // If we found a next partially filled row, copy that row into target
@@ -183,6 +190,8 @@ if(!window.tetris){
                 areAnyPointsOutsideGrid.call(this, this.fallingBlock.getPoints()) ||
                 areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
+                // Fire event signifying block placed
+                window.tetris.EventManager.fire("BlockPlaced");
                 // Gravity caused block collision, reset block state
                 this.fallingBlock.setState(state);
                 // Update collision grid

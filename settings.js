@@ -33,6 +33,11 @@ if(!window.tetris){
         // grid ui settings
         this.uiGridWidth = 5;
         this.uiGridHeight = 5;
+
+        // score settings
+        this.pointsForBlockPlace = 5;
+        this.pointsForLineClearBase = 50;
+        this.pointsForLineClearMult = 2;
     };
 
     window.tetris.Settings = new Settings();
