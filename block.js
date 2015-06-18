@@ -195,7 +195,7 @@ if(!window.tetris){
         }
     };
 
-    Block.prototype.resetState = function(state){
+    Block.prototype.setState = function(state){
         this.position.x = state.position.x;
         this.position.y = state.position.y;
         this.angle = state.angle;

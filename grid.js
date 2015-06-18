@@ -151,7 +151,7 @@ if(!window.tetris){
                 areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Rotation resulted in invalid position, reset block state
-                this.fallingBlock.resetState(state);
+                this.fallingBlock.setState(state);
             }
 
             // Apply horizontal force to falling block
@@ -162,7 +162,7 @@ if(!window.tetris){
                 areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Horizontal force resulted in invalid position, reset block state
-                this.fallingBlock.resetState(state);
+                this.fallingBlock.setState(state);
             }
 
             // Apply down force to falling block
@@ -173,7 +173,7 @@ if(!window.tetris){
                 areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Down force resulted in invalid position, reset block state
-                this.fallingBlock.resetState(state);
+                this.fallingBlock.setState(state);
             }
 
             // Apply gravity to falling block
@@ -184,7 +184,7 @@ if(!window.tetris){
                 areAnyPointsOccupiedInCollisionGrid.call(this, this.fallingBlock.getPoints())
             ){
                 // Gravity caused block collision, reset block state
-                this.fallingBlock.resetState(state);
+                this.fallingBlock.setState(state);
                 // Update collision grid
                 updateCollisionGrid.call(this, this.fallingBlock);
                 this.fallingBlock = null;
@@ -193,8 +193,8 @@ if(!window.tetris){
         }
     };
 
-    Grid.prototype.spawnBlock = function(){
-        this.fallingBlock = new window.tetris.Block();
+    Grid.prototype.spawnBlock = function(block){
+        this.fallingBlock = block;
     };
 
     // An invalid state is a state where the falling block is in a collision

@@ -29,7 +29,10 @@ if(!window.tetris){
         this.blockHorizontalForcePeriod = 1 / this.blockHorizontalForceSpeed; // in seconds per grid block
         this.blockRotationForceSpeed = 1; // in 90 degree increments per second
         this.blockRotationForcePeriod = 1 / this.blockRotationForceSpeed; // in seconds per 90 degree increment
-        // TODO define other game settings
+
+        // grid ui settings
+        this.uiGridWidth = 5;
+        this.uiGridHeight = 5;
     };
 
     window.tetris.Settings = new Settings();
