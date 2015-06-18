@@ -10,7 +10,14 @@ if(!window.tetris){
         this.grid = null;
         this.blockQueue = null;
         this.ui = null;
+        this.level = null;
     };
+
+    function handleLevelChange(){
+        // Increase block fall speed
+        window.tetris.Settings.blockFallSpeed = 0.1 * Math.pow(this.level, 1.5) + 3;
+        window.tetris.Settings.blockFallPeriod = 1 / window.tetris.Settings.blockFallSpeed;
+    }
 
     GameManager.prototype.update = function(){
         switch(this.gameState){
@@ -23,6 +30,7 @@ if(!window.tetris){
                     window.tetris.Settings.gridHeight);
                 this.blockQueue = new window.tetris.BlockQueue();
                 this.ui = new window.tetris.UI();
+                this.level = 1;
                 window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
                 this.gameState = "playing";
                 break;
@@ -30,6 +38,14 @@ if(!window.tetris){
                 if(this.grid.isActive()){
                     this.grid.update();
                 }else{
+                    // Check if we should transition level
+                    var requiredScoreForNextLevel = Math.pow(this.level, 3) + 200 * this.level;
+                    if(this.ui.getScore() >= requiredScoreForNextLevel){
+                        this.level++;
+                        handleLevelChange.call(this);
+                        window.tetris.EventManager.fire("LevelChanged");
+                    }
+
                     this.grid.spawnBlock(this.blockQueue.getNext());
                     if(!this.grid.isInValidState()){
                         window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.restartGameMsg);
@@ -41,9 +57,16 @@ if(!window.tetris){
             case "game_over":
                 if(window.tetris.Input.getPressCount("Space") > 0){
                     window.tetris.Input.clearPressCount("Space");
-                    window.tetris.EventManager.fire("GameRestart");
+
+                    // Reset objects
+                    window.tetris.Settings.reset();
                     this.grid.reset();
+
+                    // Fire events
+                    window.tetris.EventManager.fire("GameRestart");
                     window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
+
+                    // Transition game state
                     this.gameState = "playing";
                 }
                 break;

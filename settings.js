@@ -4,6 +4,10 @@ if(!window.tetris){
 
 (function(){
     var Settings = function(){
+        this.reset();
+    };
+
+    Settings.prototype.reset = function(){
         // fps settings
         this.targetFps = 30; // frames per second
         this.targetFramePeriodInSeconds = 1 / this.targetFps; // seconds per frame

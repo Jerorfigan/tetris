@@ -24,6 +24,10 @@ if(!window.tetris){
             window.tetris.Settings.pointsForLineClearBase *
             Math.pow(window.tetris.Settings.pointsForLineClearMult,eventData.prevLinesCleared);
     }
+
+    function onLevelChange(){
+        this.data.level++;
+    }
     /* End private members */
 
     var UI = function(){
@@ -44,12 +48,18 @@ if(!window.tetris){
         window.tetris.EventManager.subscribe("BlockPlaced", onBlockPlaced, this);
         window.tetris.EventManager.subscribe("LineCleared", onLineClear, this);
         window.tetris.EventManager.subscribe("GameRestart", initData, this);
+        window.tetris.EventManager.subscribe("LevelChanged", onLevelChange, this);
+
     };
 
     UI.prototype.draw = function(){
         this.levelTag.innerHTML = this.data.level;
         this.scoreTag.innerHTML = this.data.score;
         this.linesTag.innerHTML = this.data.lines;
+    };
+
+    UI.prototype.getScore = function(){
+        return this.data.score;
     };
 
     window.tetris.UI = UI;
