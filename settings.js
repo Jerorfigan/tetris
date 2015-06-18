@@ -12,6 +12,10 @@ if(!window.tetris){
         this.targetFps = 30; // frames per second
         this.targetFramePeriodInSeconds = 1 / this.targetFps; // seconds per frame
 
+        // canvas settings
+        this.canvasWidth = 500; // in pixels
+        this.canvasHeight = 500; // in pixels
+
         // grid settings
         this.gridWidth = 10; // in blocks
         this.gridHeight = 20; // in blocks
@@ -35,8 +39,6 @@ if(!window.tetris){
         this.blockRotationForcePeriod = 1 / this.blockRotationForceSpeed; // in seconds per 90 degree increment
 
         // grid ui settings
-        this.uiGridWidth = 5;
-        this.uiGridHeight = 5;
         this.uiGridColor = "#000";
 
         // score settings
