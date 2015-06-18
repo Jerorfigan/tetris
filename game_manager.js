@@ -81,7 +81,7 @@ if(!window.tetris){
         ctx2d.clearRect(0,0,this.canvas.width, this.canvas.height);
         // Clear ui canvas to white
         var ctx2dui = this.uiCanvas.getContext("2d");
-        ctx2dui.fillStyle = "#FFFFFF";
+        ctx2dui.fillStyle = window.tetris.Settings.uiGridColor;
         ctx2dui.fillRect(0,0,this.uiCanvas.width, this.uiCanvas.height);
 
         this.grid.draw(this.canvas);

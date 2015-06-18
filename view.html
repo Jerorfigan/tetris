@@ -7,17 +7,19 @@
 </head>
 <body>
     <div id="tetris-container">
-        <p id="tetris-message"></p>
-        <canvas id="tetris-canvas" width="500" height="500">You will need to upgrade your browser to be able to run this game.</canvas>
+        <div id="tetris-game-window">
+            <p id="tetris-message"></p>
+            <canvas id="tetris-canvas" width="500" height="500">You will need to upgrade your browser to be able to run this game.</canvas>
+        </div>
         <div id="tetris-ui">
-            <p>Next Block</p>
+            <p>next block</p>
             <canvas id="tetris-ui-next-block-canvas" width="120" height="120"></canvas>
             <div id="tetris-metrics">
-                <p>Level:</p>
+                <p>level</p>
                 <div id="tetris-level" class="metric">1</div>
-                <p>Score:</p>
+                <p>score</p>
                 <div id="tetris-score" class="metric">0</div>
-                <p>Lines:</p>
+                <p>lines</p>
                 <div id="tetris-lines" class="metric">0</div>
             </div>
         </div>

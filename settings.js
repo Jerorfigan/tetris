@@ -18,9 +18,9 @@ if(!window.tetris){
         this.gridBlockDrawWidth = 20; // in pixels
         this.gridBlockDrawHeight = 20; // in pixels
         this.gridOutlineDrawWidth = 2; // in pixels
-        this.gridOutlineColor = "#606060";
+        this.gridOutlineColor = "#FFFFFF";
         this.gridBlockOutlineWidth = 2; // in pixels
-        this.gridBlockOutlineColor = "#303030";
+        this.gridBlockOutlineColor = "#000";
         this.gridBlockInsetWidth = 2; // in pixels
 
         // block settings
@@ -37,6 +37,7 @@ if(!window.tetris){
         // grid ui settings
         this.uiGridWidth = 5;
         this.uiGridHeight = 5;
+        this.uiGridColor = "#000";
 
         // score settings
         this.pointsForBlockPlace = 5;
