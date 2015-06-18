@@ -95,12 +95,32 @@ if(!window.tetris){
     function getRandomBlockColor(){
         return Math.floor(Math.random() * blockColors.length);
     }
+
+    function getSpawnPosition() {
+        var blockOffsets = offsets[this.type][this.angle];
+        var minX = null, maxX = null, minY = null;
+        for (var i = 0; i < blockOffsets.length; i++) {
+            if (!minY || blockOffsets[i].y < minY) minY = blockOffsets[i].y;
+            if (!minX || blockOffsets[i].x < minX) minX = blockOffsets[i].x;
+            if (!maxX || blockOffsets[i].x > maxX) maxX = blockOffsets[i].x;
+        }
+        var blockWidth = null;
+        if(maxX < 0){
+            blockWidth = Math.abs(minX) + 1;
+        }else if(minX > 0){
+            blockWidth = maxX + 1;
+        }else{
+            blockWidth = Math.abs(minX) + maxX + 1;
+        }
+        var leftEdgePos = Math.floor((window.tetris.Settings.gridWidth - blockWidth) / 2);
+        return {
+            x: minX > 0 ? leftEdgePos : leftEdgePos + Math.abs(minX),
+            y: Math.abs(minY)
+        };
+    }
     /* End Private Members */
 
     var Block = function(){
-        this.position = {
-            x: window.tetris.Settings.blockSpawnPos.x,
-            y: window.tetris.Settings.blockSpawnPos.y};
         this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
         this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
         this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
@@ -108,6 +128,7 @@ if(!window.tetris){
         this.type = getRandomBlockType.call(this);
         this.angle = getRandomBlockAngle.call(this);
         this.color = getRandomBlockColor.call(this);
+        this.position = getSpawnPosition.call(this);
     };
 
     Block.prototype.applyRotation = function(){

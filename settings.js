@@ -28,7 +28,6 @@ if(!window.tetris){
         this.gridBlockInsetWidth = 2; // in pixels
 
         // block settings
-        this.blockSpawnPos = {x: Math.floor(this.gridWidth / 2), y: Math.min(2, this.gridHeight - 1)};
         this.blockFallSpeed = 3; // in grid blocks per second
         this.blockFallPeriod = 1 / this.blockFallSpeed; // in seconds per grid block
         this.blockDownForceSpeed = 18; // in grid blocks per second
