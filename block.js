@@ -100,9 +100,9 @@ if(!window.tetris){
         var blockOffsets = offsets[this.type][this.angle];
         var minX = null, maxX = null, minY = null;
         for (var i = 0; i < blockOffsets.length; i++) {
-            if (!minY || blockOffsets[i].y < minY) minY = blockOffsets[i].y;
-            if (!minX || blockOffsets[i].x < minX) minX = blockOffsets[i].x;
-            if (!maxX || blockOffsets[i].x > maxX) maxX = blockOffsets[i].x;
+            if (minY == null || blockOffsets[i].y < minY) minY = blockOffsets[i].y;
+            if (minX == null || blockOffsets[i].x < minX) minX = blockOffsets[i].x;
+            if (maxX == null || blockOffsets[i].x > maxX) maxX = blockOffsets[i].x;
         }
         var blockWidth = null;
         if(maxX < 0){
@@ -115,7 +115,7 @@ if(!window.tetris){
         var leftEdgePos = Math.floor((window.tetris.Settings.gridWidth - blockWidth) / 2);
         return {
             x: minX > 0 ? leftEdgePos : leftEdgePos + Math.abs(minX),
-            y: Math.abs(minY)
+            y: minY > 0 ? 0 : Math.abs(minY)
         };
     }
     /* End Private Members */
