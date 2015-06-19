@@ -67,11 +67,54 @@ if(!window.tetris){
             // 0 degrees (0)
             [{x:0,y:-2},{x:0,y:-1},{x:1,y:0}],
             // 90 degrees (1)
-            [{x:1,y:0},{x:2,y:0},{x:0,y:-1}],
+            [{x:1,y:0},{x:2,y:0},{x:0,y:1}],
             // 180 degrees (2)
             [{x:-1,y:0},{x:0,y:1},{x:0,y:2}],
             // 270 degrees (3)
             [{x:-2,y:0},{x:-1,y:0},{x:0,y:-1}]
+        ],
+        // L type reflected (3)
+        /* P = pivot point
+             0 degrees                          180 degrees
+                 -----                          ---------
+                 |   |        90 degrees        | P |   |       270 degrees
+                 -----        -----             ---------       -------------
+                 |   |        |   |             |   |           |   |   | P |
+             ---------        -------------     -----           -------------
+             |   | P |        | P |   |   |     |   |                   |   |
+             ---------        -------------     -----                   -----
+
+        */
+        [
+            // 0 degrees (0)
+            [{x:0,y:-2},{x:0,y:-1},{x:-1,y:0}],
+            // 90 degrees (1)
+            [{x:1,y:0},{x:2,y:0},{x:0,y:-1}],
+            // 180 degrees (2)
+            [{x:1,y:0},{x:0,y:1},{x:0,y:2}],
+            // 270 degrees (3)
+            [{x:-2,y:0},{x:-1,y:0},{x:0,y:1}]
+        ],
+        // T type (4)
+        /* P = pivot point
+            0 degrees          90 degrees     180 degrees       270 degrees
+                -----          -----          -------------         -----
+                |   |          |   |          |   | P |   |         |   |
+            -------------      ---------      -------------     ---------
+            |   | P |   |      | P |   |          |   |         |   | P |
+            -------------      ---------          -----         ---------
+                               |   |                                |   |
+                               -----                                -----
+         */
+        [
+            // 0 degrees (0)
+            [{x:-1,y:0},{x:0,y:-1},{x:1,y:0}],
+            // 90 degrees (1)
+            [{x:0,y:-1},{x:1,y:0},{x:0,y:1}],
+            // 180 degrees (2)
+            [{x:-1,y:0},{x:0,y:1},{x:1,y:0}],
+            // 270 degrees (3)
+            [{x:0,y:-1},{x:-1,y:0},{x:0,y:1}]
         ]
     ];
 
@@ -85,7 +128,7 @@ if(!window.tetris){
     ];
 
     function getRandomBlockType(){
-        return Math.floor(Math.random() * 3);
+        return Math.floor(Math.random() * offsets.length);
     }
 
     function getRandomBlockAngle(){
