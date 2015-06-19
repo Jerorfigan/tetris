@@ -107,10 +107,10 @@ if(!window.tetris){
         var xMin = null, xMax = null, yMin = null, yMax = null;
         for(var i = 0; i < points.length; i++){
             var renderPoint = this.gameSpace2RenderSpace(points[i]);
-            if(!xMin || renderPoint.x < xMin) xMin = renderPoint.x;
-            if(!yMin || renderPoint.y < yMin) yMin = renderPoint.y;
-            if(!xMax || renderPoint.x > xMax) xMax = renderPoint.x;
-            if(!yMax || renderPoint.y > yMax) yMax = renderPoint.y;
+            if(xMin == null || renderPoint.x < xMin) xMin = renderPoint.x;
+            if(yMin == null || renderPoint.y < yMin) yMin = renderPoint.y;
+            if(xMax == null || renderPoint.x > xMax) xMax = renderPoint.x;
+            if(yMax == null || renderPoint.y > yMax) yMax = renderPoint.y;
             renderPoints.push(renderPoint);
         }
         // Derive the center point for the block as the average of the lower and upper bounds
