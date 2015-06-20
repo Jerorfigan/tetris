@@ -8,7 +8,7 @@ if(!window.tetris){
         this.uiCanvas = null;
         this.gameState = "init";
         this.grid = null;
-        this.blockQueue = null;
+        this.tetrominoQueue = null;
         this.ui = null;
         this.level = null;
     };
@@ -28,16 +28,14 @@ if(!window.tetris){
                 this.grid = new window.tetris.Grid(
                     window.tetris.Settings.gridWidth,
                     window.tetris.Settings.gridHeight);
-                this.blockQueue = new window.tetris.BlockQueue();
+                this.tetrominoQueue = new window.tetris.TetrominoQueue(this.grid);
                 this.ui = new window.tetris.UI();
                 this.level = 1;
                 window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
                 this.gameState = "playing";
                 break;
             case "playing":
-                if(this.grid.isActive()){
-                    this.grid.update();
-                }else{
+                if(this.grid.isReadyToSpawnBlock()){
                     // Check if we should transition level
                     var requiredScoreForNextLevel = Math.pow(this.level, 3) + 200 * this.level;
                     if(this.ui.getScore() >= requiredScoreForNextLevel){
@@ -46,12 +44,18 @@ if(!window.tetris){
                         window.tetris.EventManager.fire("LevelChanged");
                     }
 
-                    this.grid.spawnBlock(this.blockQueue.getNext());
-                    if(!this.grid.isInValidState()){
-                        window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.restartGameMsg);
-                        this.gameState = "game_over";
-                        break;
+                    try{
+                        this.grid.spawnTetromino(this.tetrominoQueue.getNext());
+                    }catch(error) {
+                        if (error == "GRID IS FULL") {
+                            window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.restartGameMsg);
+                            this.gameState = "game_over";
+                        } else {
+                            throw error;
+                        }
                     }
+                }else{
+                    this.grid.update();
                 }
                 break;
             case "game_over":
@@ -61,6 +65,7 @@ if(!window.tetris){
                     // Reset objects
                     window.tetris.Settings.reset();
                     this.grid.reset();
+                    this.level = 1;
 
                     // Fire events
                     window.tetris.EventManager.fire("GameRestart");
@@ -85,7 +90,7 @@ if(!window.tetris){
         ctx2dui.fillRect(0,0,this.uiCanvas.width, this.uiCanvas.height);
 
         this.grid.draw(this.canvas);
-        this.blockQueue.draw(this.uiCanvas);
+        this.tetrominoQueue.draw(this.uiCanvas);
         this.ui.draw();
     };
 

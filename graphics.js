@@ -99,10 +99,10 @@ if(!window.tetris){
         ctx2d.restore();
     };
 
-    Graphics.prototype.drawBlockCenteredInCanvas = function(canvas, block){
-        // Convert block points to render points and find the lower and upper
+    Graphics.prototype.drawTetrominoCenteredInCanvas = function(canvas, tetromino){
+        // Convert tetromino points to render points and find the lower and upper
         // x and y bounds
-        var points = block.getPoints();
+        var points = tetromino.getPoints();
         var renderPoints = [];
         var xMin = null, xMax = null, yMin = null, yMax = null;
         for(var i = 0; i < points.length; i++){
@@ -113,7 +113,7 @@ if(!window.tetris){
             if(yMax == null || renderPoint.y > yMax) yMax = renderPoint.y;
             renderPoints.push(renderPoint);
         }
-        // Derive the center point for the block as the average of the lower and upper bounds
+        // Derive the center point for the tetromino as the average of the lower and upper bounds
         var centerRefPoint = {x: (xMax - xMin)/2 + xMin, y: (yMax - yMin)/2 + yMin};
         // Derive the offset from the center point for each render point
         var offsetsFromCenterRefPoint = [];
@@ -136,7 +136,7 @@ if(!window.tetris){
         }
 
         for(var i = 0; i < finalRenderPoints.length; i++){
-            this.drawBlock(canvas, finalRenderPoints[i], block.getColor());
+            this.drawBlock(canvas, finalRenderPoints[i], tetromino.getColor());
         }
     };
 

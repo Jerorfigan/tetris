@@ -26,9 +26,10 @@ if(!window.tetris){
         this.gridBlockOutlineWidth = 2; // in pixels
         this.gridBlockOutlineColor = "#000";
         this.gridBlockInsetWidth = 2; // in pixels
+        this.gridApplyGravity = false;
 
         // block settings
-        this.blockFallSpeed = 3; // in grid blocks per second
+         this.blockFallSpeed = 3; // in grid blocks per second
         this.blockFallPeriod = 1 / this.blockFallSpeed; // in seconds per grid block
         this.blockDownForceSpeed = 18; // in grid blocks per second
         this.blockDownForcePeriod = 1 / this.blockDownForceSpeed; // in seconds per grid block

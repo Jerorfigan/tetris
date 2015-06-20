@@ -118,7 +118,7 @@ if(!window.tetris){
         ]
     ];
 
-    var blockColors = [
+    var tetrominoColors = [
         {fill: "#FF0000", inset: "#FF4D4D", outset: "#B20000"}, // red
         {fill: "#00FF00", inset: "#4DFF4D", outset: "#00B200"}, // green
         {fill: "#0000FF", inset: "#4D4DFF", outset: "#0000B2"}, // blue
@@ -136,7 +136,7 @@ if(!window.tetris){
     }
 
     function getRandomBlockColor(){
-        return Math.floor(Math.random() * blockColors.length);
+        return Math.floor(Math.random() * tetrominoColors.length);
     }
 
     function getSpawnPosition() {
@@ -163,7 +163,7 @@ if(!window.tetris){
     }
     /* End Private Members */
 
-    var Block = function(){
+    var Tetromino = function(grid){
         this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
         this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
         this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
@@ -172,9 +172,19 @@ if(!window.tetris){
         this.angle = getRandomBlockAngle.call(this);
         this.color = getRandomBlockColor.call(this);
         this.position = getSpawnPosition.call(this);
+        this.grid = grid;
+        this.stationary = false;
     };
 
-    Block.prototype.applyRotation = function(){
+    Tetromino.prototype.update = function(){
+        this.rotate();
+        this.translate();
+        this.translateDown();
+        this.applyGravity();
+    };
+
+    Tetromino.prototype.rotate = function(){
+        var oldAngle = this.angle;
         if(window.tetris.Input.getReleaseCount("Z") > 0 || window.tetris.Input.getReleaseCount("X") > 0){
             // Upon releasing Z/X, reset rotation timer to prevent accidental double rotates
             this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
@@ -207,9 +217,19 @@ if(!window.tetris){
         // wrap angle between 0 and 3
         if(this.angle < 0) this.angle = 3;
         if(this.angle > 3) this.angle = 0;
+
+        // If angle changed and new angle puts tetromino into collision state
+        if(oldAngle != this.angle){
+            if(this.grid.areAnyPointsOutsideGrid(this.getPoints()) || !this.grid.areGridSquaresEmpty(this.getPoints())){
+                // Reset angle
+                this.angle = oldAngle;
+            }
+        }
     };
 
-    Block.prototype.applyHorizontalForce = function(){
+    Tetromino.prototype.translate = function(){
+        var oldPosition = {x: this.position.x, y: this.position.y};
+
         if(window.tetris.Input.getReleaseCount("Left") > 0 || window.tetris.Input.getReleaseCount("Right") > 0){
             // Upon releasing Left/Right, reset horizontal force timer to prevent accidental double rotates
             this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
@@ -239,40 +259,49 @@ if(!window.tetris){
                 this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
             }
         }
+
+        // If position changed and new position puts tetromino into collision state
+        if(oldPosition.x != this.position.x || oldPosition.y != this.position.y){
+            if(this.grid.areAnyPointsOutsideGrid(this.getPoints()) || !this.grid.areGridSquaresEmpty(this.getPoints())){
+                // Reset position
+                this.position = oldPosition;
+            }
+        }
     };
 
-    Block.prototype.applyDownForce = function(){
+    Tetromino.prototype.translateDown = function(){
         if(window.tetris.Input.isKeyDown("Down")){
             this.timeUntilDownForceUpdateInSeconds -= window.tetris.Settings.targetFramePeriodInSeconds;
             if(this.timeUntilDownForceUpdateInSeconds <= 0){
+                var oldPosition = {x: this.position.x, y: this.position.y};
                 this.position.y += 1;
+                // If new position puts tetromino into collision state
+                if(this.grid.areAnyPointsOutsideGrid(this.getPoints()) || !this.grid.areGridSquaresEmpty(this.getPoints())){
+                    // Reset position
+                    this.position = oldPosition;
+                }
+
                 this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
             }
         }
     };
 
-    Block.prototype.applyGravity = function(){
+    Tetromino.prototype.applyGravity = function(){
         this.timeUntilGravityUpdateInSeconds -= window.tetris.Settings.targetFramePeriodInSeconds;
         if(this.timeUntilGravityUpdateInSeconds <= 0){
+            var oldPosition = {x: this.position.x, y: this.position.y};
             this.position.y += 1;
+            // If new position puts tetromino into collision state
+            if(this.grid.areAnyPointsOutsideGrid(this.getPoints()) || !this.grid.areGridSquaresEmpty(this.getPoints())){
+                // Reset position and flag tetromino as stationary
+                this.position = oldPosition;
+                this.stationary = true;
+            }
             this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
         }
     };
 
-    Block.prototype.setState = function(state){
-        this.position.x = state.position.x;
-        this.position.y = state.position.y;
-        this.angle = state.angle;
-    };
-
-    Block.prototype.getState = function(){
-        return {
-            position: {x: this.position.x, y: this.position.y},
-            angle: this.angle
-        };
-    };
-
-    Block.prototype.getPoints = function(){
+    Tetromino.prototype.getPoints = function(){
         var points = [];
         for(var i = 0; i < offsets[this.type][this.angle].length; i++){
             points.push({
@@ -284,9 +313,23 @@ if(!window.tetris){
         return points;
     };
 
-    Block.prototype.getColor = function(){
-        return blockColors[this.color];
+    Tetromino.prototype.getColor = function(){
+        return tetrominoColors[this.color];
     };
 
-    window.tetris.Block = Block;
+    Tetromino.prototype.isStationary = function(){
+        return this.stationary;
+    };
+
+    Tetromino.prototype.draw = function(canvas){
+        var points = this.getPoints();
+        for(var pi = 0; pi < points.length; pi++){
+            window.tetris.Graphics.drawBlock(
+                canvas,
+                window.tetris.Graphics.gameSpace2RenderSpace(points[pi]),
+                this.getColor());
+        }
+    };
+
+    window.tetris.Tetromino = Tetromino;
 }());

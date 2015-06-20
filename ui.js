@@ -42,6 +42,7 @@ if(!window.tetris){
         this.levelTag = window.document.getElementById("tetris-level");
         this.scoreTag = window.document.getElementById("tetris-score");
         this.linesTag = window.document.getElementById("tetris-lines");
+        this.gravitySwitch = window.document.getElementById("tetris-gravity-switch");
 
         // register events
         window.tetris.EventManager.subscribe("ShowMessage", showMessage, this);
@@ -49,7 +50,9 @@ if(!window.tetris){
         window.tetris.EventManager.subscribe("LineCleared", onLineClear, this);
         window.tetris.EventManager.subscribe("GameRestart", initData, this);
         window.tetris.EventManager.subscribe("LevelChanged", onLevelChange, this);
-
+        this.gravitySwitch.addEventListener("change", function(){
+           window.tetris.Settings.gridApplyGravity = !window.tetris.Settings.gridApplyGravity;
+        });
     };
 
     UI.prototype.draw = function(){
