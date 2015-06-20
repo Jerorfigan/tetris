@@ -37,7 +37,7 @@ if(!window.tetris){
             case "playing":
                 if(this.grid.isReadyToSpawnBlock()){
                     // Check if we should transition level
-                    var requiredScoreForNextLevel = Math.pow(this.level, 3) + 200 * this.level;
+                    var requiredScoreForNextLevel = Math.pow(this.level, 3) + 1000 * this.level;
                     if(this.ui.getScore() >= requiredScoreForNextLevel){
                         this.level++;
                         handleLevelChange.call(this);
