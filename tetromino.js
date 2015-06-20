@@ -115,16 +115,59 @@ if(!window.tetris){
             [{x:-1,y:0},{x:0,y:1},{x:1,y:0}],
             // 270 degrees (3)
             [{x:0,y:-1},{x:-1,y:0},{x:0,y:1}]
+        ],
+        // Z type (5)
+        /* P = pivot point
+            0 degrees             90 degrees         180 degrees        270 degrees
+            ---------                 -----          ---------              -----
+            |   | P |                 |   |          |   |   |              |   |
+            -------------         ---------          -------------      ---------
+                |   |   |         |   | P |              | P |   |      | P |   |
+                ---------         ---------              ---------      ---------
+                                  |   |                                 |   |
+                                  -----                                 -----
+         */
+        [
+            // 0 degrees (0)
+            [{x:-1,y:0},{x:0,y:1},{x:1,y:1}],
+            // 90 degrees (1)
+            [{x:0,y:-1},{x:-1,y:0},{x:-1,y:1}],
+            // 180 degrees (2)
+            [{x:-1,y:-1},{x:0,y:-1},{x:1,y:0}],
+            // 270 degrees (3)
+            [{x:1,y:-1},{x:1,y:0},{x:0,y:1}]
+        ],
+        // S type (6)
+        /* P = pivot point
+          0 degrees             90 degrees     180 degrees          270 degrees
+              ---------         -----              ---------        -----
+              | P |   |         |   |              |   |   |        |   |
+          -------------         ---------      -------------        ---------
+          |   |   |             |   | P |      |   | P |            | P |   |
+          ---------             ---------      ---------            ---------
+                                    |   |                               |   |
+                                    -----                               -----
+         */
+        [
+            // 0 degrees (0)
+            [{x:1,y:0},{x:0,y:1},{x:-1,y:1}],
+            // 90 degrees (1)
+            [{x:-1,y:-1},{x:-1,y:0},{x:0,y:1}],
+            // 180 degrees (2)
+            [{x:-1,y:0},{x:0,y:-1},{x:1,y:-1}],
+            // 270 degrees (3)
+            [{x:0,y:-1},{x:1,y:0},{x:1,y:1}]
         ]
     ];
 
     var tetrominoColors = [
-        {fill: "#FF0000", inset: "#FF4D4D", outset: "#B20000"}, // red
-        {fill: "#00FF00", inset: "#4DFF4D", outset: "#00B200"}, // green
-        {fill: "#0000FF", inset: "#4D4DFF", outset: "#0000B2"}, // blue
+        {fill: "#FFFF00", inset: "#FFFF4D", outset: "#B2B200"}, // yellow
+        {fill: "#00FFFF", inset: "#4DFFFF", outset: "#00B2B2"}, // cyan
         {fill: "#FF9900", inset: "#FFB84D", outset: "#B26B00"}, // orange
+        {fill: "#0000FF", inset: "#4D4DFF", outset: "#0000B2"}, // blue
         {fill: "#FF00FF", inset: "#FF4DFF", outset: "#B200B2"}, // purple
-        {fill: "#00FFFF", inset: "#4DFFFF", outset: "#00B2B2"}  // teal
+        {fill: "#FF0000", inset: "#FF4D4D", outset: "#B20000"}, // red
+        {fill: "#00FF00", inset: "#4DFF4D", outset: "#00B200"} // green
     ];
 
     function getRandomBlockType(){
@@ -133,10 +176,6 @@ if(!window.tetris){
 
     function getRandomBlockAngle(){
         return Math.floor(Math.random() * 4);
-    }
-
-    function getRandomBlockColor(){
-        return Math.floor(Math.random() * tetrominoColors.length);
     }
 
     function getSpawnPosition() {
@@ -170,7 +209,6 @@ if(!window.tetris){
         this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
         this.type = getRandomBlockType.call(this);
         this.angle = getRandomBlockAngle.call(this);
-        this.color = getRandomBlockColor.call(this);
         this.position = getSpawnPosition.call(this);
         this.grid = grid;
         this.stationary = false;
@@ -314,7 +352,7 @@ if(!window.tetris){
     };
 
     Tetromino.prototype.getColor = function(){
-        return tetrominoColors[this.color];
+        return tetrominoColors[this.type];
     };
 
     Tetromino.prototype.isStationary = function(){
