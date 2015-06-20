@@ -26,7 +26,7 @@ if(!window.tetris){
         this.gridBlockOutlineWidth = 2; // in pixels
         this.gridBlockOutlineColor = "#000";
         this.gridBlockInsetWidth = 2; // in pixels
-        this.gridApplyGravity = false;
+        this.gridApplyGravity = window.document.getElementById("tetris-gravity-switch").checked;
 
         // block settings
          this.blockFallSpeed = 3; // in grid blocks per second

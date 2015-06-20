@@ -50,8 +50,8 @@ if(!window.tetris){
         window.tetris.EventManager.subscribe("LineCleared", onLineClear, this);
         window.tetris.EventManager.subscribe("GameRestart", initData, this);
         window.tetris.EventManager.subscribe("LevelChanged", onLevelChange, this);
-        this.gravitySwitch.addEventListener("change", function(){
-           window.tetris.Settings.gridApplyGravity = !window.tetris.Settings.gridApplyGravity;
+        this.gravitySwitch.addEventListener("change", function(eventObject){
+           window.tetris.Settings.gridApplyGravity = eventObject.target.checked;
         });
     };
 
