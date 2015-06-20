@@ -212,6 +212,7 @@ if(!window.tetris){
         this.position = getSpawnPosition.call(this);
         this.grid = grid;
         this.stationary = false;
+        this.translateDownUpdates = 0;
     };
 
     Tetromino.prototype.update = function(){
@@ -317,6 +318,9 @@ if(!window.tetris){
                 if(this.grid.areAnyPointsOutsideGrid(this.getPoints()) || !this.grid.areGridSquaresEmpty(this.getPoints())){
                     // Reset position
                     this.position = oldPosition;
+                }else{
+                    // Count how many times we translated the block down a unit as score will be based on this
+                    this.translateDownUpdates++;
                 }
 
                 this.timeUntilDownForceUpdateInSeconds = window.tetris.Settings.blockDownForcePeriod;
@@ -334,6 +338,7 @@ if(!window.tetris){
                 // Reset position and flag tetromino as stationary
                 this.position = oldPosition;
                 this.stationary = true;
+                window.tetris.EventManager.fire("BlockPlaced", {translateDownUpdates: this.translateDownUpdates});
             }
             this.timeUntilGravityUpdateInSeconds = window.tetris.Settings.blockFallPeriod;
         }

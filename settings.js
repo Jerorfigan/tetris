@@ -42,9 +42,10 @@ if(!window.tetris){
         this.uiGridColor = "#000";
 
         // score settings
-        this.pointsForBlockPlace = 5;
-        this.pointsForLineClearBase = 50;
+        this.pointsForBlockPlace = 10;
+        this.pointsForLineClearBase = 100;
         this.pointsForLineClearMult = 2;
+        this.pointsForBackToBackTetris = 1200;
     };
 
     window.tetris.Settings = new Settings();

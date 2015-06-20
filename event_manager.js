@@ -7,7 +7,7 @@ if(!window.tetris){
     var eventList = [
         "GameRestart",
         "BlockPlaced",
-        "LineCleared",
+        "LinesCleared",
         "LevelChanged",
         "ShowMessage"
     ];

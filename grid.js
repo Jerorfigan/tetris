@@ -51,7 +51,7 @@ if(!window.tetris){
                 targetRow--;
             }
             // No more rows to check
-            if(targetRow < 0) return;
+            if(targetRow < 0) break;
 
             // Find next partially filled row to swap into the filled/empty row
             if(!nextPartiallyFilledRow){
@@ -65,10 +65,9 @@ if(!window.tetris){
                 nextPartiallyFilledRow--;
             }
 
-            // Check if we're about to do a line clear and fire event
+            // Count line clears
             if(this.rowStats[targetRow].blocksFilled == this.width){
                 linesCleared++;
-                window.tetris.EventManager.fire("LineCleared", {prevLinesCleared: linesCleared - 1});
             }
 
             // If we found a next partially filled row, copy that row into target
@@ -81,6 +80,11 @@ if(!window.tetris){
                 }
                 targetRow--;
             }
+        }
+
+        // Fire event informing on how many lines were cleared
+        if(linesCleared > 0){
+            window.tetris.EventManager.fire("LinesCleared", {linesCleared: linesCleared});
         }
     }
 
@@ -300,7 +304,6 @@ if(!window.tetris){
                 if(this.playerControlledTetromino != null){
                     this.playerControlledTetromino.update();
                     if(this.playerControlledTetromino.isStationary()){
-                        window.tetris.EventManager.fire("BlockPlaced");
                         absorbTetromino.call(this);
                         this.playerControlledTetromino = null;
                         resolveRowClears.call(this);

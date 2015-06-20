@@ -14,15 +14,26 @@ if(!window.tetris){
         this.messageTag.innerHTML = message;
     }
 
-    function onBlockPlaced(){
-        this.data.score += window.tetris.Settings.pointsForBlockPlace;
+    function onBlockPlaced(eventData){
+        // translateDownUpdates is a count of how many units the block was translated down due to the player holding the
+        // down arrow. As placing the block is harder when its being dropped quicker, we're awarding the player additional
+        // points for this.
+        this.data.score += window.tetris.Settings.pointsForBlockPlace + eventData.translateDownUpdates;
     }
 
-    function onLineClear(eventData){
-        this.data.lines++;
-        this.data.score +=
-            window.tetris.Settings.pointsForLineClearBase *
-            Math.pow(window.tetris.Settings.pointsForLineClearMult,eventData.prevLinesCleared);
+    function onLinesCleared(eventData){
+        this.data.lines += eventData.linesCleared;
+
+        if(onLinesCleared.prevLinesCleared != undefined && onLinesCleared.prevLinesCleared == 4 && eventData.linesCleared == 4){
+            // Got a double tetris!
+            this.data.score += window.tetris.Settings.pointsForBackToBackTetris;
+        }else{
+            this.data.score +=
+                window.tetris.Settings.pointsForLineClearBase *
+                Math.pow(window.tetris.Settings.pointsForLineClearMult, eventData.linesCleared - 1);
+        }
+
+        onLinesCleared.prevLinesCleared = eventData.linesCleared;
     }
 
     function onLevelChange(){
@@ -47,7 +58,7 @@ if(!window.tetris){
         // register events
         window.tetris.EventManager.subscribe("ShowMessage", showMessage, this);
         window.tetris.EventManager.subscribe("BlockPlaced", onBlockPlaced, this);
-        window.tetris.EventManager.subscribe("LineCleared", onLineClear, this);
+        window.tetris.EventManager.subscribe("LinesCleared", onLinesCleared, this);
         window.tetris.EventManager.subscribe("GameRestart", initData, this);
         window.tetris.EventManager.subscribe("LevelChanged", onLevelChange, this);
         this.gravitySwitch.addEventListener("change", function(eventObject){
