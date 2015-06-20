@@ -35,6 +35,14 @@ if(!window.tetris){
                 this.gameState = "playing";
                 break;
             case "playing":
+                // Check for pause
+                if(window.tetris.Input.getPressCount("Space") > 0) {
+                    window.tetris.Input.clearPressCount("Space");
+                    window.document.getElementById("tetris-pause-message").style.visibility = "visible";
+                    this.gameState = "paused";
+                    break;
+                }
+
                 if(this.grid.isReadyToSpawnBlock()){
                     // Check if we should transition level
                     var requiredScoreForNextLevel = Math.pow(this.level, 3) + 1000 * this.level;
@@ -56,6 +64,13 @@ if(!window.tetris){
                     }
                 }else{
                     this.grid.update();
+                }
+                break;
+            case "paused":
+                if(window.tetris.Input.getPressCount("Space") > 0) {
+                    window.tetris.Input.clearPressCount("Space");
+                    window.document.getElementById("tetris-pause-message").style.visibility = "hidden";
+                    this.gameState = "playing";
                 }
                 break;
             case "game_over":
