@@ -31,90 +31,90 @@ if(!window.tetris){
         ],
         // straight type (1)
         /* P = pivot point
-             0 degrees                             180 degrees
-             -----                                 -----
-             |   |        90 degrees               |   |        270 degrees
-             -----        -----------------        -----        -----------------
-             | P |        |   |   | P |   |        |   |        |   | P |   |   |
-             -----        -----------------        -----        -----------------
-             |   |                                 | P |
-             -----                                 -----
-             |   |                                 |   |
-             -----                                 -----
+                                 90 degrees                             270 degrees
+                                 -----                                 -----
+         0 degrees               |   |        180 degrees              |   |
+         -----------------       -----        -----------------        -----
+         |   | P |   |   |       | P |        |   |   | P |   |        |   |
+         -----------------       -----        -----------------        -----
+                                 |   |                                 | P |
+                                 -----                                 -----
+                                 |   |                                 |   |
+                                 -----                                 -----
          */
         [
             // 0 degrees (0)
-            [{x:0,y:-1},{x:0,y:1},{x:0,y:2}],
+            [{x:-1,y:0},{x:1,y:0},{x:2,y:0}],
             // 90 degrees (1)
-            [{x:-2,y:0},{x:-1,y:0},{x:1,y:0}],
+            [{x:0,y:-1},{x:0,y:1},{x:0,y:2}],
             // 180 degrees (2)
-            [{x:0,y:-2},{x:0,y:-1},{x:0,y:1}],
+            [{x:-2,y:0},{x:-1,y:0},{x:1,y:0}],
             // 270 degrees (3)
-            [{x:-1,y:0},{x:1,y:0},{x:2,y:0}]
+            [{x:0,y:-2},{x:0,y:-1},{x:0,y:1}]
         ],
         // L type (2)
         /* P = pivot point
-            0 degrees                       180 degrees      270 degrees
-            -----                           ---------                -----
-            |   |        90 degrees         |   | P |                |   |
-            -----        -------------      ---------        -------------
-            |   |        | P |   |   |          |   |        |   |   | P |
-            ---------    -------------          -----        -------------
-            | P |   |    |   |                  |   |
-            ---------    -----                  -----
+                                90 degrees      180 degrees        270 degrees
+                                ---------                -----     -----
+             0 degrees          |   | P |                |   |     |   |
+             -------------      ---------        -------------     -----
+             | P |   |   |          |   |        |   |   | P |     |   |
+             -------------          -----        -------------     ---------
+             |   |                  |   |                          | P |   |
+             -----                  -----                          ---------
          */
         [
             // 0 degrees (0)
-            [{x:0,y:-2},{x:0,y:-1},{x:1,y:0}],
-            // 90 degrees (1)
             [{x:1,y:0},{x:2,y:0},{x:0,y:1}],
-            // 180 degrees (2)
+            // 90 degrees (1)
             [{x:-1,y:0},{x:0,y:1},{x:0,y:2}],
+            // 180 degrees (2)
+            [{x:-2,y:0},{x:-1,y:0},{x:0,y:-1}],
             // 270 degrees (3)
-            [{x:-2,y:0},{x:-1,y:0},{x:0,y:-1}]
+            [{x:0,y:-2},{x:0,y:-1},{x:1,y:0}]
         ],
         // L type reflected (3)
         /* P = pivot point
-             0 degrees                          180 degrees
-                 -----                          ---------
-                 |   |        90 degrees        | P |   |       270 degrees
-                 -----        -----             ---------       -------------
-                 |   |        |   |             |   |           |   |   | P |
-             ---------        -------------     -----           -------------
-             |   | P |        | P |   |   |     |   |                   |   |
-             ---------        -------------     -----                   -----
+                             90 degrees                          270 degrees
+                                 -----                          ---------
+         0 degrees               |   |        180 degrees       | P |   |
+         -------------           -----        -----             ---------
+         |   |   | P |           |   |        |   |             |   |
+         -------------       ---------        -------------     -----
+                 |   |       |   | P |        | P |   |   |     |   |
+                 -----       ---------        -------------     -----
 
         */
         [
             // 0 degrees (0)
-            [{x:0,y:-2},{x:0,y:-1},{x:-1,y:0}],
+            [{x:-2,y:0},{x:-1,y:0},{x:0,y:1}],
             // 90 degrees (1)
-            [{x:1,y:0},{x:2,y:0},{x:0,y:-1}],
+            [{x:0,y:-2},{x:0,y:-1},{x:-1,y:0}],
             // 180 degrees (2)
-            [{x:1,y:0},{x:0,y:1},{x:0,y:2}],
+            [{x:1,y:0},{x:2,y:0},{x:0,y:-1}],
             // 270 degrees (3)
-            [{x:-2,y:0},{x:-1,y:0},{x:0,y:1}]
+            [{x:1,y:0},{x:0,y:1},{x:0,y:2}]
         ],
         // T type (4)
         /* P = pivot point
-            0 degrees          90 degrees     180 degrees       270 degrees
-                -----          -----          -------------         -----
-                |   |          |   |          |   | P |   |         |   |
-            -------------      ---------      -------------     ---------
-            |   | P |   |      | P |   |          |   |         |   | P |
-            -------------      ---------          -----         ---------
-                               |   |                                |   |
-                               -----                                -----
+             0 degrees        90 degrees     180 degrees        270 degrees
+             -------------    	  -----          -----          -----
+             |   | P |   |    	  |   |          |   |          |   |
+             -------------    ---------      -------------      ---------
+                 |   |        |   | P |      |   | P |   |      | P |   |
+                 -----        ---------      -------------      ---------
+                                  |   |                         |   |
+                                  -----	                        -----
          */
         [
             // 0 degrees (0)
-            [{x:-1,y:0},{x:0,y:-1},{x:1,y:0}],
-            // 90 degrees (1)
-            [{x:0,y:-1},{x:1,y:0},{x:0,y:1}],
-            // 180 degrees (2)
             [{x:-1,y:0},{x:0,y:1},{x:1,y:0}],
+            // 90 degrees (1)
+            [{x:0,y:-1},{x:-1,y:0},{x:0,y:1}],
+            // 180 degrees (2)
+            [{x:-1,y:0},{x:0,y:-1},{x:1,y:0}],
             // 270 degrees (3)
-            [{x:0,y:-1},{x:-1,y:0},{x:0,y:1}]
+            [{x:0,y:-1},{x:1,y:0},{x:0,y:1}]
         ],
         // Z type (5)
         /* P = pivot point
@@ -174,10 +174,6 @@ if(!window.tetris){
         return Math.floor(Math.random() * offsets.length);
     }
 
-    function getRandomBlockAngle(){
-        return Math.floor(Math.random() * 4);
-    }
-
     function getSpawnPosition() {
         var blockOffsets = offsets[this.type][this.angle];
         var minX = null, maxX = null, minY = null;
@@ -208,7 +204,7 @@ if(!window.tetris){
         this.timeUntilHorizontalForceUpdateInSeconds = window.tetris.Settings.blockHorizontalForcePeriod;
         this.timeUntilRotationForceUpdateInSeconds = window.tetris.Settings.blockRotationForcePeriod;
         this.type = getRandomBlockType.call(this);
-        this.angle = getRandomBlockAngle.call(this);
+        this.angle = 0;
         this.position = getSpawnPosition.call(this);
         this.grid = grid;
         this.stationary = false;
