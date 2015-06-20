@@ -30,6 +30,7 @@ if(!window.tetris){
                     window.tetris.Settings.gridHeight);
                 this.tetrominoQueue = new window.tetris.TetrominoQueue(this.grid);
                 this.ui = new window.tetris.UI();
+                this.ui.init();
                 this.level = 1;
                 window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.playerControlsMsg);
                 this.gameState = "playing";

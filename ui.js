@@ -47,6 +47,9 @@ if(!window.tetris){
             score: null,
             lines: null
         };
+    };
+
+    UI.prototype.init = function(){
         initData.call(this);
 
         this.messageTag = window.document.getElementById("tetris-message");
@@ -61,8 +64,9 @@ if(!window.tetris){
         window.tetris.EventManager.subscribe("LinesCleared", onLinesCleared, this);
         window.tetris.EventManager.subscribe("GameRestart", initData, this);
         window.tetris.EventManager.subscribe("LevelChanged", onLevelChange, this);
+
         this.gravitySwitch.addEventListener("change", function(eventObject){
-           window.tetris.Settings.gridApplyGravity = eventObject.target.checked;
+            window.tetris.Settings.gridApplyGravity = eventObject.target.checked;
         });
     };
 

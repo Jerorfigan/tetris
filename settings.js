@@ -4,7 +4,6 @@ if(!window.tetris){
 
 (function(){
     var Settings = function(){
-        this.reset();
     };
 
     Settings.prototype.reset = function(){

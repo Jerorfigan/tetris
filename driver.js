@@ -22,6 +22,7 @@ window.onload = function(){
     // Setup and kick off game driver
     (function () {
         var Driver = function () {
+            window.tetris.Settings.reset();
             this.lastUpdateTimeInMilliseconds = 0;
             this.framePeriodInMilliseconds = window.tetris.Settings.targetFramePeriodInSeconds * 1000;
             this.gameManager = new window.tetris.GameManager();
