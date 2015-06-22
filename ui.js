@@ -8,6 +8,7 @@ if(!window.tetris){
         this.data.level = 1;
         this.data.score = 0;
         this.data.lines = 0;
+        this.data.name = null;
     }
 
     function showMessage(message){
@@ -57,6 +58,7 @@ if(!window.tetris){
         this.scoreTag = window.document.getElementById("tetris-score");
         this.linesTag = window.document.getElementById("tetris-lines");
         this.gravitySwitch = window.document.getElementById("tetris-gravity-switch");
+        this.nameInput = window.document.getElementById("tetris-high-score-name-input");
 
         // register events
         window.tetris.EventManager.subscribe("ShowMessage", showMessage, this);
@@ -68,6 +70,11 @@ if(!window.tetris){
         this.gravitySwitch.addEventListener("change", function(eventObject){
             window.tetris.Settings.gridApplyGravity = eventObject.target.checked;
         });
+
+        var thisObj = this;
+        this.nameInput.addEventListener("change", function(eventObject){
+            thisObj.data.name = eventObject.target.value;
+        });
     };
 
     UI.prototype.draw = function(){
@@ -78,6 +85,10 @@ if(!window.tetris){
 
     UI.prototype.getScore = function(){
         return this.data.score;
+    };
+
+    UI.prototype.getName = function(){
+        return this.data.name;
     };
 
     window.tetris.UI = UI;

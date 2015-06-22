@@ -10,8 +10,12 @@
         <div id="tetris-game-window">
             <p id="tetris-message"></p>
             <canvas id="tetris-canvas" width="500" height="500">You will need to upgrade your browser to be able to run this game.</canvas>
-            <div id="tetris-pause-message">
+            <div id="tetris-pause-message" class="tetris-prompt">
                 <p>paused</p>
+            </div>
+            <div id="tetris-high-score-name-input-container" class="tetris-prompt">
+                <p>New high score! Enter name:</p>
+                <input type="text" id="tetris-high-score-name-input" />
             </div>
         </div>
         <div id="tetris-ui">

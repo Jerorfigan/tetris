@@ -3,6 +3,76 @@ if(!window.tetris){
 }
 
 (function(){
+    /* Private members */
+    function handleLevelChange(){
+        // Increase block fall speed
+        window.tetris.Settings.blockFallSpeed = 0.1 * Math.pow(this.level, 1.5) + 3;
+        window.tetris.Settings.blockFallPeriod = 1 / window.tetris.Settings.blockFallSpeed;
+    }
+
+    function createHighScore(name, score){
+        var ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState==4 && ajax.status==200){
+                console.log("new high score created");
+            }
+        };
+        ajax.open("POST", "http://ambrosemcjunkin.com/ajax/tetris/createHighScore", false);
+        ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        var postData = encodeURIComponent(JSON.stringify({name: name, score: score}));
+        ajax.send("data=" + postData);
+    }
+
+    function getHighScores(){
+        var thisObj = this;
+        var ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = function(){
+            if(ajax.readyState==4 && ajax.status==200){
+                thisObj.highScores = JSON.parse(ajax.responseText);
+            }
+        };
+        ajax.open("GET", "http://ambrosemcjunkin.com/ajax/tetris/getHighScores", false);
+        ajax.send();
+    }
+
+    function isScoreHighScore(score){
+        var isHighScore = false;
+        if(this.highScores == null || this.highScores.length < 3){
+            isHighScore = true;
+        }else{
+            for(var hsi = 0; hsi < this.highScores.length; hsi++){
+                if(score > this.highScores[hsi].score){
+                    isHighScore = true;
+                    break;
+                }
+            }
+        }
+        return isHighScore;
+    }
+
+    function updateLocalHighScores(name, score){
+        if(this.highScores == null || this.highScores.length == 0){
+            this.highScores = [{name: name, score: score}];
+        }else{
+            var addedToArray = false;
+            for(var hsi = 0; hsi < this.highScores.length; hsi++){
+                if(score > this.highScores[hsi].score){
+                    this.highScores.splice(hsi, 0, {name: name, score: score});
+                    addedToArray = true;
+                    break;
+                }
+            }
+            if(!addedToArray){
+                this.highScores.push({name: name, score: score})
+            }
+            if(this.highScores.length > 3)
+            {
+                this.highScores.splice(3,1);
+            }
+        }
+    }
+    /* End private members */
+
     var GameManager = function(){
         this.canvas = null;
         this.uiCanvas = null;
@@ -11,13 +81,8 @@ if(!window.tetris){
         this.tetrominoQueue = null;
         this.ui = null;
         this.level = null;
+        this.highScores = null;
     };
-
-    function handleLevelChange(){
-        // Increase block fall speed
-        window.tetris.Settings.blockFallSpeed = 0.1 * Math.pow(this.level, 1.5) + 3;
-        window.tetris.Settings.blockFallPeriod = 1 / window.tetris.Settings.blockFallSpeed;
-    }
 
     GameManager.prototype.update = function(){
         switch(this.gameState){
@@ -58,7 +123,14 @@ if(!window.tetris){
                     }catch(error) {
                         if (error == "GRID IS FULL") {
                             window.tetris.EventManager.fire("ShowMessage", window.tetris.Labels.restartGameMsg);
-                            this.gameState = "game_over";
+                            getHighScores.call(this);
+                            if(isScoreHighScore.call(this, this.ui.getScore())){
+                                window.document.getElementById("tetris-high-score-name-input-container").style.visibility = "visible";
+                                window.document.getElementById("tetris-high-score-name-input").value = "";
+                                this.gameState = "wait_for_name_input";
+                            }else{
+                                this.gameState = "game_over";
+                            }
                         } else {
                             throw error;
                         }
@@ -72,6 +144,15 @@ if(!window.tetris){
                     window.tetris.Input.clearPressCount("Space");
                     window.document.getElementById("tetris-pause-message").style.visibility = "hidden";
                     this.gameState = "playing";
+                }
+                break;
+            case "wait_for_name_input":
+                if(this.ui.getName() != null){
+                    window.document.getElementById("tetris-high-score-name-input-container").style.visibility = "hidden";
+                    createHighScore.call(this, this.ui.getName(), this.ui.getScore());
+                    // Update local copy of high scores with new high score
+                    updateLocalHighScores.call(this, this.ui.getName(), this.ui.getScore());
+                    this.gameState = "game_over";
                 }
                 break;
             case "game_over":
@@ -105,9 +186,15 @@ if(!window.tetris){
         ctx2dui.fillStyle = window.tetris.Settings.uiGridColor;
         ctx2dui.fillRect(0,0,this.uiCanvas.width, this.uiCanvas.height);
 
-        this.grid.draw(this.canvas);
-        this.tetrominoQueue.draw(this.uiCanvas);
-        this.ui.draw();
+        if(this.gameState == "playing" || this.gameState == "paused" || this.gameState == "wait_for_name_input"){
+            this.grid.draw(this.canvas);
+            this.tetrominoQueue.draw(this.uiCanvas);
+            this.ui.draw();
+        }else if(this.gameState == "game_over"){
+            if(this.highScores != null){
+                window.tetris.Graphics.drawHighScores(this.canvas, this.highScores);
+            }
+        }
     };
 
     window.tetris.GameManager = GameManager;

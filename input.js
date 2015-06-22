@@ -13,11 +13,13 @@ if(!window.tetris){
     };
 
     function toggleKey(event, isDown){
+        var recognizedKey = false;
         if (event.defaultPrevented) {
             return; // Should do nothing if the key event was already consumed.
         }
 
         if (event.key !== undefined && keys[event.key] !== undefined){
+            recognizedKey = true;
             keys[event.key].isDown = isDown;
             if(isDown){
                 keys[event.key].pressCount++;
@@ -25,6 +27,7 @@ if(!window.tetris){
                 keys[event.key].releaseCount++;
             }
         } else if (event.keyIdentifier !== undefined && keys[event.keyIdentifier] !== undefined){
+            recognizedKey = true;
             keys[event.keyIdentifier].isDown = isDown;
             if(isDown){
                 keys[event.keyIdentifier].pressCount++;
@@ -35,6 +38,7 @@ if(!window.tetris){
             for(var key in keys){
                 if(keys.hasOwnProperty(key)){
                     if(keys[key].keyCode == event.keyCode){
+                        recognizedKey = true;
                         keys[key].isDown = isDown;
                         if(isDown){
                             keys[key].pressCount++;
@@ -47,8 +51,9 @@ if(!window.tetris){
             }
         }
 
-        // Consume the event for suppressing "double action".
-        event.preventDefault();
+        if(recognizedKey){
+            event.preventDefault();
+        }
     }
 
     function onKeyDown(event){

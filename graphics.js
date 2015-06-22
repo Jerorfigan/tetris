@@ -140,5 +140,34 @@ if(!window.tetris){
         }
     };
 
+    Graphics.prototype.drawHighScores = function(canvas, highScores){
+        var ctx2d = canvas.getContext("2d");
+        ctx2d.save();
+        var highScorePosition = {x: 250, y: 100};
+        var namePosition = {x: 125, y: 175};
+        var scorePosition = {x: 375, y: 175};
+        var font = "bold small-caps 24px monospace";
+        var color = "#FFF";
+        this.drawText(ctx2d, "high scores", highScorePosition, font, color);
+        for(var hsi = 0; hsi < highScores.length; hsi++){
+            var name = highScores[hsi].name;
+            var score = highScores[hsi].score;
+            this.drawText(ctx2d, name, namePosition, font, color);
+            this.drawText(ctx2d, score, scorePosition, font, color);
+            namePosition.y += 50;
+            scorePosition.y += 50;
+        }
+        ctx2d.restore();
+    };
+
+    Graphics.prototype.drawText = function(ctx, text, pos, font, color){
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = font;
+        var textMetrics = ctx.measureText(text);
+        ctx.fillText(text, pos.x - textMetrics.width/2, pos.y);
+        ctx.restore();
+    };
+
     window.tetris.Graphics = new Graphics();
 }());
