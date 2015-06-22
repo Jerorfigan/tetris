@@ -20,19 +20,34 @@ if(!window.tetris){
         ajax.open("POST", "http://ambrosemcjunkin.com/ajax/tetris/createHighScore", false);
         ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         var postData = encodeURIComponent(JSON.stringify({name: name, score: score}));
-        ajax.send("data=" + postData);
+        try{
+            ajax.send("data=" + postData);
+        }catch(error){
+            // Nothing we can do if ajax request fails, but at least suppress error so game doesn't stop running
+            console.log(error);
+        }
     }
 
-    function getHighScores(){
+    function getHighScores() {
         var thisObj = this;
         var ajax = new XMLHttpRequest();
-        ajax.onreadystatechange = function(){
-            if(ajax.readyState==4 && ajax.status==200){
-                thisObj.highScores = JSON.parse(ajax.responseText);
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState == 4 && ajax.status == 200) {
+                try{
+                    thisObj.highScores = JSON.parse(ajax.responseText);
+                }catch(error){
+                    console.log(error);
+                }
+
             }
         };
         ajax.open("GET", "http://ambrosemcjunkin.com/ajax/tetris/getHighScores", false);
-        ajax.send();
+        try{
+            ajax.send();
+        }catch(error){
+            // Nothing we can do if ajax request fails, but at least suppress error so game doesn't stop running
+            console.log(error);
+        }
     }
 
     function isScoreHighScore(score){
