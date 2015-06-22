@@ -34,7 +34,7 @@ p{
     font-variant: small-caps;
     font-weight: bold;
     color: white;
-    font-size: 1.5em;
+    font-size: 20px;
     font-family: monospace;
     margin: 10px;
 }
@@ -46,7 +46,7 @@ p{
     padding: 10px;
     color: white;
     font-family: fantasy;
-    font-size: 2em;
+    font-size: 24px;
 }
 
 #tetris-container
